@@ -1,5 +1,5 @@
 {
-    "xsappname": "express-ts-btp-api",
+    "xsappname": "nitro-ts-btp-api",
     "tenant-mode": "shared",
     "description": "Security profile of called application",
     "scopes": [
