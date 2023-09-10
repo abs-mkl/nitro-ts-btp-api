@@ -1,0 +1,75 @@
+ID: nitro-ts-btp-api
+_schema-version: "3.1"
+version: 1.0.0
+
+modules:
+  ######### App Router ##########################
+  - name: nitro-ts-btp-api-router
+    type: approuter.nodejs
+    path: router
+    build-parameters:
+      ignore:
+        - node_modules/
+        - default-services.json
+        - default-env.json
+      builder: custom
+      commands: []
+    parameters:
+      disk-quota: 200M
+      memory: 100M
+    properties:
+      TENANT_HOST_PATTERN: "^(.*)-(.*)-nitro-ts-btp-api-router.cfapps.(.*).hana.ondemand.com"
+    requires:
+      - name: nitro-ts-btp-api-uaa
+      - name: nitro-ts-btp-api-dest
+      - name: nitro-ts-btp-api-srv
+        group: destinations
+        properties:
+          name: nitro-ts-btp-api-service
+          url: ~{url}
+          forwardAuthToken: true
+
+######### Service ##########################
+  - name: nitro-ts-btp-api-service
+    type: nodejs
+    path: srv
+    build-parameters:
+      ignore:
+        - node_modules/
+        - src/
+        - .gitignore
+        - .prettier*
+        - .eslint*
+        - default-services.json
+        - default-env.json
+      builder: custom
+      commands:
+        - npm install
+        - npm run lint
+        - npm run build
+    parameters:
+      disk-quota: 200M
+      memory: 100M
+    provides:
+      - name: nitro-ts-btp-api-srv
+        properties:
+          url: ${default-url}
+    requires:
+      - name: nitro-ts-btp-api-uaa
+      - name: nitro-ts-btp-api-dest
+
+resources:
+######### Destination Service ##########################      
+  - name: nitro-ts-btp-api-dest
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service-plan: lite
+      service: destination
+
+######### UAA Service #################################
+  - name: nitro-ts-btp-api-uaa
+    type: org.cloudfoundry.managed-service
+    parameters:
+      path: ./xs-security.json
+      service-plan: application
+      service: xsuaa
