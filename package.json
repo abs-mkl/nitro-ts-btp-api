@@ -1,7 +1,7 @@
 {
   "name": "nitro-ts-btp-api",
   "version": "1.0.0",
-  "description": "",
+  "description": "Boilerplate for a SAP BTP nodejs API Server with nitro and Typescript including authentication",
   "repository": {
     "url": "https://github.com/schw4be/nitro-ts-btp-api"
   },
@@ -14,7 +14,7 @@
   },
   "devDependencies": {
     "cross-var": "^1.1.0",
-    "mbt": "^1.2.25",
+    "mbt": "^1.2.31",
     "npm-run-all": "^4.1.5"
   }
 }
